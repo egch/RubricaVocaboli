@@ -1,0 +1,8 @@
+ db.user.insert({ "_id": 1, "username": "enricogiurin", "email": "enricogiurin@gmail.com" });
+
+ db.words.insert({
+ "sentence": "backbone",
+ "translation": "spina dorsale",
+ "language": "EN",
+ "user_id": 1
+ });
