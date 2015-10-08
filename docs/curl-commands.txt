@@ -1,0 +1,2 @@
+curl --request POST 'http://localhost:8080/api/words' --data "sentence='dog'&translation='cane'&language='EN'"
+curl -X DELETE 'http://localhost:8080/api/words/5615b8e2f6e5bc0279000001'
