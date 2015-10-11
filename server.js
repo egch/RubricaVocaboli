@@ -11,13 +11,19 @@ var bodyParser = require('body-parser');
 var mongoose   = require('mongoose');
 mongoose.connect('mongodb://localhost/rubricavocaboli');
 var Word     = require('./app/models/word');
+var basicAuth = require('basic-auth-connect');
+
+
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+// basic authentication hard-coded
 
-var port = process.env.PORT || 8080;        // set our port
+app.use(basicAuth('username', 'password'));
+
+var port = process.env.PORT || 8090;        // set our port
 
 // ROUTES FOR OUR API
 // =============================================================================
@@ -75,4 +81,4 @@ app.use('/api', router);
 // =============================================================================
 app.listen(port);
 console.log('Magic happens on port ' + port);
-console.log('access with http://localhost:8080/api/words');
+console.log('access with http://localhost:8090/api/words');
