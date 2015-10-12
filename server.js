@@ -9,9 +9,9 @@ var express    = require('express');        // call express
 var app        = express();                 // define our app using express
 var bodyParser = require('body-parser');
 var mongoose   = require('mongoose');
-mongoose.connect('mongodb://localhost/rubricavocaboli');
 var Word     = require('./app/models/word');
 var basicAuth = require('basic-auth-connect');
+var validator = require('validator');
 
 
 
@@ -22,7 +22,7 @@ app.use(bodyParser.json());
 // basic authentication hard-coded
 
 app.use(basicAuth('username', 'password'));
-
+mongoose.connect('mongodb://localhost/rubricavocaboli');
 var port = process.env.PORT || 8090;        // set our port
 
 // ROUTES FOR OUR API
@@ -45,13 +45,22 @@ router.route('/words')
          word.sentence = request.body.sentence;
          word.translation = request.body.translation;
          word.language = request.body.language;
+         console.log("creating new word with - sentence: "+word.sentence+" - translation: "+word.translation+" - language: "+word.language);
+         if(!(validator.isLength(word.sentence, 2, 30)&&
+              validator.isLength(word.translation, 2, 30)&&
+              validator.isLength(word.language, 2, 2)))
+             {
+                throw "Validation error";
+             }
 
          word.save(function(err) {
-             if (err)
+             if (err) {
+                 console("err: "+err);
                  response.send(err);
-
+                 }
              response.json({ message: 'Word created!' });
          });
+
      });
 
 
@@ -65,13 +74,15 @@ router.route('/words/:word_id')
      }).
      delete(function(request, response)
      {
-     Word.remove({_id:request.params.word_id},
-     function(err, word)
-     {
-     if(err)
-        response.send(err);
-     response.json({message: 'word deleted'});
-     });
+         Word.remove({_id:request.params.word_id},
+         function(err, word)
+         {
+         if(err) {
+            console("err: "+err);
+            response.send(err);
+            }
+         response.json({message: 'word deleted'});
+         });
      });
 
 
