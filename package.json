@@ -1,11 +1,11 @@
 {
-    "name": "rubrica-vocaboli",
-    "main": "server.js",
-    "dependencies": {
-        "express": "~4.0.0",
-        "mongoose": "~3.6.13",
-        "body-parser": "~1.0.1",
-        "basic-auth-connect": "1.0.0",
-        "validator": "4.1.0"
-    }
+  "name": "rubrica-vocaboli",
+  "main": "server.js",
+  "dependencies": {
+    "body-parser": "^1.14.1",
+    "express": "^5.0.0-alpha.2",
+    "mongoose": "^4.1.11",
+    "basic-auth-connect": "1.0.0",
+    "validator": "4.1.0"
+  }
 }
