@@ -85,6 +85,17 @@ router.route('/words/:word_id')
          });
      });
 
+//for search like
+router.route('/wordslike/:word')
+.get(function(request, response) {
+        var word = request.params.word;
+        console.log("search like: "+word);
+        Word.find({'sentence' : new RegExp(word, 'i')}, function(err, words){
+           if (err) {response.send(err);}
+           response.json(words);
+        });
+     });
+
 
 app.use('/api', router);
 
