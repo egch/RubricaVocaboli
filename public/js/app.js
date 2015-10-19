@@ -4,7 +4,7 @@ var rubricaApp = angular.module('rubrica', ['ngRoute', 'ngResource']);
 rubricaApp.factory('Word', function($resource, $http){
     //authentication BASIC username/password
     $http.defaults.headers.common['Authorization'] = 'basic dXNlcm5hbWU6cGFzc3dvcmQ=';
-    return  $resource('http://localhost:8090/api/words/:_id')
+    return  $resource('http://78.47.91.46:8090/api/words/:_id')
  });
 
 
