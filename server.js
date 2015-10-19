@@ -9,8 +9,8 @@ var express    = require('express');        // call express
 var app        = express();                 // define our app using express
 var bodyParser = require('body-parser');
 var mongoose   = require('mongoose');
-var Word     = require('./app/models/word');
-var basicAuth = require('basic-auth');
+var Word     =  require('./app/models/word');
+var auth = require('./app/utils/auth');
 var validator = require('validator');
 
 
@@ -23,30 +23,8 @@ app.use(bodyParser.json());
 //app.use(basicAuth('username', 'password'));
 
 
-var auth = function (req, res, next) {
-  function unauthorized(res) {
-    console.log('unauthorized user');
-    res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
-    return res.send(401);
-  };
-
-  var user = basicAuth(req);
-
-  if (!user || !user.name || !user.pass) {
-    return unauthorized(res);
-  };
-
-  if (user.name === 'username' && user.pass === 'password') {
-    return next();
-  } else {
-    return unauthorized(res);
-  };
-};
-
-
-
 mongoose.connect('mongodb://localhost/rubricavocaboli');
-var port = process.env.PORT || 8090;        // set our port
+
 
 // ROUTES FOR OUR API
 // =============================================================================
@@ -57,10 +35,10 @@ router.route('/words')
 .get(function(request, response )
 {
  Word.find(function(err, words) {
-            if (err)
-                response.send(err);
-            console.log('header: '+request.headers['authorization']);
-
+            if (err){
+             console.log("err: "+err);
+             response.send(err);
+             }
             response.json(words);
         });
 })
@@ -91,8 +69,10 @@ router.route('/words')
 router.route('/words/:word_id')
     .get(function(request, response) {
         Word.findById(request.params.word_id, function(err, word) {
-            if (err)
-                response.send(err);
+            if (err) {
+             console.log("err: "+err);
+             response.send(err);
+            }
             response.json(word);
         })
      }).
@@ -140,15 +120,16 @@ app.use(function (req, res, next) {
     next();
 });
 
-
+//authentication layer
 app.use(function(req, res, next){
         console.log(req.url);
-        return  auth(req,res,next);
+        return  auth.basicAuth(req,res,next);
 });
-
+//routes layer
 app.use('/api', router);
 
 // START THE SERVER
 // =============================================================================
+var port = process.env.PORT || 8090;        // set our port
 app.listen(port);
-console.log('access with http://localhost:8090/api/words');
+console.log('serving at http://localhost:8090/api/words');
