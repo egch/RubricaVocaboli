@@ -1,0 +1,66 @@
+<form name="myForm" ng-submit="addWord()" class="form-horizontal" novalidate>
+    <fieldset>
+
+
+        <div class="form-group">
+            <label for="sentence" class="col-sm-2 col-lg-2 control-label">sentence</label>
+
+            <div class="col-sm-10 col-lg-10">
+                <input type="text" ng-model="word.sentence" id="sentence" name="sentence"
+                       placeholder="Type sentence here..." ng-minlength=2 required>
+            </div>
+            <div class="error"
+                 ng-show="myForm.sentence.$dirty && myForm.sentence.$invalid">
+
+                <small class="error"
+                       ng-show="myForm.sentence.$error.minlength">
+                    sentence is required to be at least 2 characters
+                </small>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label for="translation" class="col-sm-2 col-lg-2 control-label">translation</label>
+
+            <div class="col-sm-5 col-lg-5">
+                <textarea ng-model="word.translation" id="translation" name="translation"
+                       placeholder="Type translation here..." ng-minlength=2 required></textarea>
+            </div>
+            <div class="error"
+                 ng-show="myForm.translation.$dirty && myForm.translation.$invalid">
+
+                <small class="error"
+                       ng-show="myForm.translation.$error.minlength">
+                    translation is required to be at least 2 characters
+                </small>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label for="language" class="col-sm-2 col-lg-2 control-label">language</label>
+
+            <div class="col-sm-2 col-lg-2">
+                <select class="form-control" id="language" ng-model="word.language">
+                    <option value="EN" selected>EN</option>
+                    <!-- interpolation -->
+                    <option value="DE">DE</option>
+                </select>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="col-sm-5 col-lg-5 col-sm-offset-2">
+                <input ng-disabled="myForm.$invalid" type="submit" class="btn btn-primary" value="Save"/>
+            </div>
+        </div>
+
+
+    </fieldset>
+</form>
+
+
+
+

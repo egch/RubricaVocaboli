@@ -1,0 +1,15 @@
+
+{
+  "name": "caratarse-webclient",
+  "description": "AngularJS based client for caratarse",
+  "version": "0.0.0",
+  "homepage": "https://github.com/egch/caratarse-webclient",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "angular": "1.3.x", 
+    "bootstrap": "3.3.4",
+    "angular-route": "1.3.x",
+    "angular-resource": "1.3.x"
+  }
+}

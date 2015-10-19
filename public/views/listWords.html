@@ -1,0 +1,28 @@
+<h3>Words</h3>
+<div class="container-fluid">
+    <div ng-show="submissionSuccess" class="alert alert-success fade in">
+        <a  class="close" data-dismiss="alert">&times;</a>
+        <strong>Success!</strong>Your action has been completed successfully.
+    </div>
+
+    <div ng-show="submissionError" class="alert alert-danger fade in">
+        <a  class="close" data-dismiss="alert">&times;</a>
+        <strong>Error!</strong>
+        <h5>A technical problem has been occurred!</h5>
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-6">
+            <ul class="list-group">
+                <li class="list-group-item" ng-repeat="word in data">
+                    <h4>sentence: {{word.sentence}}</h4>
+                    <h4>translation: {{word.translation}}</h4>
+                    <h4>language: {{word.language}}</h4>
+                    <a href='#/deleteWord/{{word._id}}' class='btn btn-danger'>Delete</a>
+                  <!--  <a href='' class="btn btn-warning">Update</a>-->
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

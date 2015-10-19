@@ -99,7 +99,8 @@ router.route('/wordslike/:word')
            response.json(words);
         });
      });
-
+app.use(express.static(__dirname + '/public'));
+app.use('/bower_components',  express.static(__dirname + '/bower_components'));
 // Add headers
 app.use(function (req, res, next) {
 
@@ -127,6 +128,7 @@ app.use(function(req, res, next){
 });
 //routes layer
 app.use('/api', router);
+
 
 // START THE SERVER
 // =============================================================================
