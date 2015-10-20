@@ -3,8 +3,9 @@ var rubricaApp = angular.module('rubrica', ['ngRoute', 'ngResource']);
 
 rubricaApp.factory('Word', function($resource, $http){
     //authentication BASIC username/password
-    $http.defaults.headers.common['Authorization'] = 'basic dXNlcm5hbWU6cGFzc3dvcmQ=';
-    return  $resource('http://78.47.91.46:8090/api/words/:_id')
+    //$http.defaults.headers.common['Authorization'] = 'basic dXNlcm5hbWU6cGFzc3dvcmQ=';
+   // return  $resource('http://78.47.91.46:8090/api/words/:_id')
+   return  $resource('http://localhost:8090/api/words/:_id')
  });
 
 
@@ -14,7 +15,7 @@ rubricaApp.factory('Word', function($resource, $http){
 //object to share data among controllers and views
 rubricaApp.factory('Store', function() {
  var savedData = {}
- var error = {}
+
  function set(data) {
    savedData = data;
  }
@@ -29,19 +30,22 @@ return {
 
 });
 
+
+/* ********** controller section ********** */
+
 rubricaApp.controller('ListWordsController',
     function ($scope, Word, Store) {
 
 
         Word.query(function(data) {
             $scope.submissionSuccess = Store.get()===true;
-            $scope.submissionError = Store.get()==='error';
             $scope.data = data;
             Store.set("");
         },
-        function(err)
+        function(error)
         {
-            console.error(err);
+            console.log('error: '+error);
+           $location.path('/error');
         });
 });
 
@@ -56,8 +60,8 @@ rubricaApp.controller('DeleteWordController',
         },
         function(error)
        {
-           Store.set('error');
-           $location.path('/words');
+           console.log('error: '+error);
+          $location.path('/error');
        });
 });
 
@@ -72,8 +76,8 @@ rubricaApp.controller('NewWordController',
 
          },function(error)
          {
-            Store.set('error');
-            $location.path('/words');
+             console.log('error: '+error.message);
+             $location.path('/error');
          });
       }
 });
@@ -102,6 +106,9 @@ rubricaApp.config(['$routeProvider',
             when('/newWord', {
                 controller:  'NewWordController',
                 templateUrl: 'views/newWord.html'
+            }).
+            when('/error', {
+                templateUrl: 'views/error.html'
             }).
             otherwise({
                 redirectTo: '/'
