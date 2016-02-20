@@ -9,7 +9,7 @@ var express    = require('express');        // call express
 var app        = express();                 // define our app using express
 var bodyParser = require('body-parser');
 var mongoose   = require('mongoose');
-var Word     =  require('./app/models/word');
+var Word     =  require('./app/models/Word');
 var auth = require('./app/utils/auth');
 var validator = require('validator');
 
