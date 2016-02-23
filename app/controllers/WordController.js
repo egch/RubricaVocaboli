@@ -7,6 +7,8 @@ var Word =  require('../models/Word');
 var app = express();
 var router = express.Router();
 
+
+//BEGIN - rest
 router.route('/words')
 .get(function(request, response )
 {
@@ -25,8 +27,7 @@ router.route('/words')
          word.language = request.body.language;
          console.log("creating new word with - sentence: "+word.sentence+" - translation: "+word.translation+" - language: "+word.language);
          if(!(validator.isLength(word.sentence, 2, 30)&&
-              validator.isLength(word.translation, 2, 30)&&
-              validator.isLength(word.language, 2, 2)))
+              validator.isLength(word.translation, 2, 30)))
              {
                 throw "Validation error";
              }
@@ -39,12 +40,16 @@ router.route('/words')
              response.json({ message: 'Word created!' });
          });
 
-     });
+ });
 
 
 router.route('/words/:word_id')
 .get(function(request, response) {
         Word.findById(request.params.word_id, function(err, word) {
+            if(word == null)
+            {response.json("word with _id "+request.params.word_id+" does not exist");
+            return;
+            }
             if (err) {
              console.log("err: "+err);
              response.send(err);
@@ -52,17 +57,40 @@ router.route('/words/:word_id')
             response.json(word);
         })
      })
+ .put(function(request, response) {
+         Word.findByIdAndUpdate({_id: request.params.word_id}, request.body, function(err, word)
+         {
+                 if(err) {
+                     console.log("err: "+err);
+                     response.json("Failing updating word having _id: "+request.params.word_id);
+                    }
+                    else
+                    {
+                        if(word!=null)
+                            {response.json("word with _id "+request.params.word_id+" has been successfully updated")}
+                        else
+                            {response.json("word with _id "+request.params.word_id+" does not exist")}
+                    }
+                 });
+      })
 .delete(function(request, response) {
-         Word.remove({_id:request.params.word_id},
+         Word.findByIdAndRemove({_id:request.params.word_id},
          function(err, word)
          {
          if(err) {
-            console.log("err: "+err);
-            response.send(err);
+             console.log("err: "+err);
+             response.json("Failing delete word having _id: "+request.params.word_id);
             }
-         response.json({message: 'word deleted'});
+            else
+            {
+                if(word!=null)
+                    {response.json("word with _id "+request.params.word_id+" has been successfully deleted")}
+                else
+                    {response.json("word with _id "+request.params.word_id+" does not exist")}
+            }
          });
      });
+//END - rest
 
 //for search like
 router.route('/wordslike/:word')
