@@ -1,4 +1,5 @@
 var rubricaApp = angular.module('rubrica', ['ngRoute', 'ngResource']);
+var restApi = 'http://localhost:8090/api/words/'
 
 
 rubricaApp.factory('Word', function($resource, $http){
@@ -67,7 +68,7 @@ rubricaApp.controller('DeleteWordController',
 
 rubricaApp.controller('NewWordController',
     function ($scope, Word, Store, $location) {
-      $scope.addWord = function() {
+      $scope.save = function() {
         console.log('word: '+$scope.word.sentence);
         Word.save($scope.word, function()
          {
@@ -80,6 +81,15 @@ rubricaApp.controller('NewWordController',
              $location.path('/error');
          });
       }
+});
+
+rubricaApp.controller('EditWordController',
+    function ($scope,  $routeParams, $http) {
+        console.log("Invocated update with _id: "+$routeParams._id);
+        $http.get(restApi+$routeParams._id).success(function (data) {
+            $scope.word = data;
+        });
+
 });
 
 
@@ -103,9 +113,13 @@ rubricaApp.config(['$routeProvider',
                 controller:  'DeleteWordController',
                 templateUrl: 'views/home.html'
             }).
+            when('/word/:_id/edit', {
+               controller:  'EditWordController',
+               templateUrl: 'views/word-edit.html'
+           }).
             when('/newWord', {
-                controller:  'NewWordController',
-                templateUrl: 'views/newWord.html'
+                 controller: 'NewWordController',
+                templateUrl: 'views/word-new.html'
             }).
             when('/error', {
                 templateUrl: 'views/error.html'
@@ -114,5 +128,3 @@ rubricaApp.config(['$routeProvider',
                 redirectTo: '/'
             });
     }]);
-
-
