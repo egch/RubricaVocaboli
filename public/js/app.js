@@ -1,78 +1,52 @@
 var rubricaApp = angular.module('rubrica', ['ngRoute', 'ngResource']);
-var restApi = 'http://localhost:8090/api/words/'
 
-
-rubricaApp.factory('Word', function($resource, $http){
-    //authentication BASIC username/password
-    //$http.defaults.headers.common['Authorization'] = 'basic dXNlcm5hbWU6cGFzc3dvcmQ=';
-   // return  $resource('http://78.47.91.46:8090/api/words/:_id')
-   return  $resource('http://localhost:8090/api/words/:_id')
- });
-
-
-
-
-
-//object to share data among controllers and views
-rubricaApp.factory('Store', function() {
- var savedData = {}
-
- function set(data) {
-   savedData = data;
- }
- function get() {
-  return savedData;
- }
-
-return {
-  set: set,
-  get: get
- }
-
-});
+rubricaApp.factory('Word', ['$resource', function($resource){
+   return  $resource('http://localhost:8090/api/words/:_id', null,
+   {
+        'update': {method:'PUT'}
+   });
+ }]);
 
 
 /* ********** controller section ********** */
 
 rubricaApp.controller('ListWordsController',
-    function ($scope, Word, Store) {
+    function ($scope, Word) {
 
 
         Word.query(function(data) {
-            $scope.submissionSuccess = Store.get()===true;
             $scope.data = data;
-            Store.set("");
         },
         function(error)
         {
             console.log('error: '+error);
-           $location.path('/error');
+            $location.path('/error');
         });
 });
 
 
 rubricaApp.controller('DeleteWordController',
-    function ($scope, Word, Store, $routeParams, $location) {
-        console.log("Invocated delete with _id: "+$routeParams._id);
-        Word.delete({_id:$routeParams._id}, function()
+    function ($scope, Word, $routeParams, $location) {
+        var result = confirm("Are you sure you want to delete this element?")
+        if(result)
         {
-            Store.set(true);
-            $location.path('/words');
-        },
-        function(error)
-       {
-           console.log('error: '+error);
-          $location.path('/error');
-       });
+            Word.delete({_id:$routeParams._id}, function()
+            {
+                $location.path('/words');
+            },
+            function(error)
+           {
+               $location.path('/error');
+           });
+       }
 });
 
 rubricaApp.controller('NewWordController',
-    function ($scope, Word, Store, $location) {
+    function ($scope, Word, $location) {
       $scope.save = function() {
         console.log('word: '+$scope.word.sentence);
         Word.save($scope.word, function()
          {
-             Store.set(true);
              $location.path('/words');
 
          },function(error)
@@ -84,16 +58,22 @@ rubricaApp.controller('NewWordController',
 });
 
 rubricaApp.controller('EditWordController',
-    function ($scope,  $routeParams, $http) {
-        console.log("Invocated update with _id: "+$routeParams._id);
-        $http.get(restApi+$routeParams._id).success(function (data) {
-            $scope.word = data;
-        });
+    function ($scope,  $routeParams, Word, $location) {
+        $scope.load = function() {
+            console.log("Invocated update with _id: "+$routeParams._id);
+            Word.get({_id:$routeParams._id}, function (data) {
+                $scope.word = data;
+            });
+        };
+        $scope.save = function() {
+            Word.update({_id:$scope.word._id}, $scope.word, function(success)
+            {
+                 $location.path('/words');
+            });
+        };
+        $scope.load()
 
 });
-
-
-
 
 
 
@@ -109,7 +89,7 @@ rubricaApp.config(['$routeProvider',
                 controller:  'ListWordsController',
                 templateUrl: 'views/listWords.html'
             }).
-            when('/deleteWord/:_id', {
+            when('/word/:_id/delete', {
                 controller:  'DeleteWordController',
                 templateUrl: 'views/home.html'
             }).
