@@ -6,5 +6,7 @@ Rubrica Vocaboli is the italian word to identify the rubric (paper) used to writ
 #Installation
 
 $ npm install
+
 $ bower install
+
 $ node server.js
