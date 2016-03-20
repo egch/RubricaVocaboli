@@ -1,7 +1,13 @@
 # RubricaVocaboli
-A simple web application built on top of the MEAN stack: MongoDB, ExpressJS, AngualarJS, NodeJS. 
+A simple web application built on top of the MEAN stack: MongoDB, ExpressJS, AngularJS, NodeJS. 
 
 Rubrica Vocaboli is the italian word to identify the rubric (paper) used to write the new words studied during the learning of a new language.
+
+#Prerequisites
+1. Node installed
+2. npm, bower installed
+3. mongo db installed and running
+4. create a database RubricaVocaboli in mongodb
 
 #Installation
 
