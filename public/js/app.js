@@ -27,33 +27,30 @@ rubricaApp.controller('ListWordsController',
 
 rubricaApp.controller('DeleteWordController',
     function ($scope, Word, $routeParams, $location) {
-        var result = confirm("Are you sure you want to delete this element?")
+        var result = confirm("Are you sure you want to delete this element?");
         if(result)
         {
-            Word.delete({_id:$routeParams._id}, function()
-            {
-                $location.path('/words');
+            Word.delete({_id:$routeParams._id}).$promise.then(
+                function (data) {
+                     $location.path('/words');
             },
-            function(error)
-           {
-               $location.path('/error');
-           });
+                function (error) {
+                    $location.path('/error');
+            });
        }
 });
 
 rubricaApp.controller('NewWordController',
     function ($scope, Word, $location) {
       $scope.save = function() {
-        console.log('word: '+$scope.word.sentence);
-        Word.save($scope.word, function()
-         {
-             $location.path('/words');
-
-         },function(error)
-         {
-             console.log('error: '+error.message);
-             $location.path('/error');
-         });
+          console.log('word: ' + $scope.word.sentence);
+          Word.save($scope.word).$promise.then(
+              function (data) {
+                  $location.path('/words');
+              },
+              function (error) {
+                  $location.path('/error');
+              });
       }
 });
 
@@ -66,10 +63,13 @@ rubricaApp.controller('EditWordController',
             });
         };
         $scope.save = function() {
-            Word.update({_id:$scope.word._id}, $scope.word, function(success)
-            {
-                 $location.path('/words');
-            });
+            Word.update({_id:$scope.word._id}, $scope.word).$promise.then(
+                function (data) {
+                    $location.path('/words');
+                }),
+                function (error) {
+                    $location.path('/error');
+                }
         };
         $scope.load()
 

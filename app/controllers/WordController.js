@@ -37,7 +37,8 @@ router.route('/words')
                  console.log("err: "+err);
                  response.send(err);
                  }
-             response.json({ message: 'Word created!' });
+             //change timeout from 0 to 2000 to see the promise in action on angular
+             setTimeout(function(){response.json({message: 'word has been created'})}, 0);
          });
 
  });
